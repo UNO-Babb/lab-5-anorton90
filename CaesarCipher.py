@@ -18,6 +18,42 @@ def encode(message, key):
 
     return secret
 
+def decode(message, key):
+    """
+    Decodes a Caesar Cipher message by shifting each letter back by the key.
+    Shifting back is the same as encoding with a negative key.
+    """
+    alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    message = message.upper()
+    plaintext = ""
+
+    # The decoding process is the same as encoding, but the key is subtracted
+    # from the spot. Python's % operator handles negative numbers correctly
+    # for 'wrap-around' logic. For example, (-3) % 26 is 23 (W).
+    for letter in message:
+        if (alpha.find(letter) >= 0): # Check if the letter is in the alphabet
+            # Subtract the key to go backward in the alphabet
+            spot = (alpha.find(letter) - key) % 26
+            plaintext = plaintext + alpha[spot]
+        else: # Preserve non-alphabetic characters
+            plaintext = plaintext + letter
+
+    return plaintext
+
+def main():
+    message = input("Enter a message: ")
+    # Ensure the key is an integer for the math to work
+    try:
+        key = int(input("Enter a key: "))
+    except ValueError:
+        print("Invalid key. Please enter an integer.")
+        return
+
+    secret = encode(message, key)
+    print ("Encrypted:", secret)
+    plaintext = decode(secret, key)
+    print ("Decrypted:", plaintext)
+
 #def decode(message, key):
     #We will want to decode the message here.
 
@@ -27,8 +63,8 @@ def main():
 
     secret = encode(message, key)
     print ("Encrypted:", secret)
-    #plaintext = decode(secret, key)
-    #print ("Decrypted:", plaintext)
+    plaintext = decode(secret, key)
+    print ("Decrypted:", plaintext)
 
 
 if __name__ == '__main__':
